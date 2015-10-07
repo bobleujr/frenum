@@ -1,4 +1,6 @@
 # frenum
-projeto de tcc modafoca
+Projeto TCC
 
-teste
+Paulo Tabarro
+Lucas Sales
+
