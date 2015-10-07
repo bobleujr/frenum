@@ -682,7 +682,7 @@ void loop()
 {
 
     //Read accelerometer values
-    int error;
+  int error;
   double dT;
   accel_t_gyro_union accel_t_gyro;
   
@@ -696,19 +696,22 @@ void loop()
   SWAP (accel_t_gyro.reg.z_accel_h, accel_t_gyro.reg.z_accel_l);
   SWAP (accel_t_gyro.reg.t_h, accel_t_gyro.reg.t_l);
 
+  float accel_x;  //resulting vector of the 2 components = square root of the squares' sum
+//  accel_x = (float) sqrt(sq(accel_t_gyro.value.y_accel*(9.81 / 16384))+sq(accel_t_gyro.value.z_accel*(9.81 / 16384))) - firstAccel;
 
-  float accel_x;
-  accel_x = (float) (accel_t_gyro.value.y_accel * 9.81 / 16384) - firstAccel;
+  accel_x = (float) (accel_t_gyro.value.y_accel*(9.81 / 16384)) - firstAccel;
 
-  if(firstAccel == 0){
+  if( firstAccel == 0 ){
     firstAccel = accel_x;
+  }else{
+    meanAccel = ((meanAccel * counter) + accel_x) / (++counter);
   }
   
-  meanAccel = ((meanAccel * counter) + accel_x) / (++counter);
+  
+
     
    if (millis() - timeold >= 250){  /*Uptade every one second, this will be equal to reading frecuency (Hz).*/
-
-      // ----> velocidade sensor stuff <-----
+      // ----> speed sensor stuff <-----
       detachInterrupt(0); // stop interrupts to calculate rpm
 
       
@@ -716,22 +719,30 @@ void loop()
       
 
       //-- >> accelerometer stuff <---
-      meanSpeed += meanAccel;
-      meanAccel = 0;
-      counter = 0;
-
-      Serial.println(pulsesA);
+      if(firstAccel != 0){
+        Serial.println("Entrou");
+        meanSpeed += meanAccel;
+      }
 
       // ----> printing <-----
       lcd.clear();
+      lcd.setCursor(5,0); //Start at character 4 on line 0
+      lcd.print("MA");
+      lcd.setCursor(9,0);
+      lcd.print(meanAccel);
+      
+      meanAccel = 0;
+      counter = 0;
+
+      // ----> printing <-----
       lcd.setCursor(0,0); //Start at character 4 on line 0
-      lcd.print("Speed W");
-      lcd.setCursor(12,0);
+      lcd.print("WS");
+      lcd.setCursor(3,0);
       lcd.print(velocidade);
 
       lcd.setCursor(0,1); //Start at character 4 on line 0
-      lcd.print("Speed Ac");
-      lcd.setCursor(12,1);
+      lcd.print("AS");
+      lcd.setCursor(3,1);
       lcd.print(meanSpeed);
 
       // ----> reinitializing <----
