@@ -1,3 +1,13 @@
+#include <FuzzyRule.h>
+#include <FuzzyComposition.h>
+#include <Fuzzy.h>
+#include <FuzzyRuleConsequent.h>
+#include <FuzzyOutput.h>
+#include <FuzzyInput.h>
+#include <FuzzyIO.h>
+#include <FuzzySet.h>
+#include <FuzzyRuleAntecedent.h>
+
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 
@@ -639,7 +649,7 @@ void counterA()
 
 void setup()
 {
-
+    
     int error;
     uint8_t c;
     
@@ -720,7 +730,6 @@ void loop()
 
       //-- >> accelerometer stuff <---
       if(firstAccel != 0){
-        Serial.println("Entrou");
         meanSpeed += meanAccel;
       }
 
